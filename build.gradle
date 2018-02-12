@@ -42,7 +42,6 @@ apply plugin: 'org.jetbrains.intellij'
 
 intellij {
     plugins = [ 'PsiViewer:3.28.93' ]
-    pluginName 'idea-demo-plugin'
     version ideaVersion
 }
 
