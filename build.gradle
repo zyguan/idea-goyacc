@@ -1,0 +1,106 @@
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath "com.github.hurricup:gradle-grammar-kit-plugin:2017.1.1"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.intellij' version "0.2.17"
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+apply plugin: 'scala'
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala', 'src/main/java', 'src/main/gen']
+        }
+        java {
+            srcDirs = []
+        }
+    }
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.4'
+}
+
+
+apply plugin: 'org.jetbrains.intellij'
+
+intellij {
+    plugins = [ 'PsiViewer:3.28.93' ]
+    pluginName 'idea-demo-plugin'
+    version ideaVersion
+}
+
+
+apply plugin: 'org.jetbrains.grammarkit'
+
+import org.jetbrains.grammarkit.tasks.GenerateLexer
+import org.jetbrains.grammarkit.tasks.GenerateParser
+
+task initGenerate(type: GenerateParser) {
+    source = 'src/main/grammars/GoYacc.bnf'
+    targetRoot = 'src/main/gen'
+    pathToParser = '/idea/goyacc/ast/GoYaccParser.java'
+    pathToPsiRoot = '/idea/goyacc/psi'
+}
+
+task initCompile(type: ScalaCompile) {
+    source = sourceSets.main.scala.srcDirs
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = sourceSets.main.scala.outputDir
+    doLast {
+        delete "${rootDir}/src/main/gen/idea/goyacc/psi"
+    }
+}
+
+task generateGoYaccParser(type: GenerateParser) {
+    dependsOn(initCompile)
+    doFirst {
+        classpath files(sourceSets.main.runtimeClasspath)
+    }
+    source = 'src/main/grammars/GoYacc.bnf'
+    targetRoot = 'src/main/gen'
+    pathToParser = '/idea/goyacc/ast/GoYaccParser.java'
+    pathToPsiRoot = '/idea/goyacc/psi'
+}
+
+task generateGoYaccLexer(type: GenerateLexer) {
+    source = 'src/main/grammars/GoYacc.flex'
+    targetDir = 'src/main/gen/idea/goyacc/ast'
+    targetClass = '_GoYaccLexer'
+}
+
+initCompile {
+    dependsOn initGenerate
+    dependsOn generateGoYaccLexer
+}
+
+compileScala {
+    dependsOn generateGoYaccParser
+    dependsOn generateGoYaccLexer
+}
+
+task cleanGen {
+    doLast { delete "${rootDir}/src/main/gen" }
+}
+
+clean {
+    dependsOn cleanGen
+}
+
+
