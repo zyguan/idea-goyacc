@@ -7,7 +7,7 @@ import com.intellij.openapi.fileTypes.{FileTypeConsumer, FileTypeFactory, Langua
 import com.intellij.openapi.util.IconLoader
 
 object GoYaccLanguage extends Language("GoYacc") {
-  val ICON: Icon = IconLoader.getIcon("/icons/jar-gray.png") // TODO
+  val ICON: Icon = IconLoader.getIcon("/icons/y.png")
 }
 
 object GoYaccFileType extends LanguageFileType(GoYaccLanguage) {
