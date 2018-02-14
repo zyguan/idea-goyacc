@@ -28,6 +28,7 @@
     <fileTypeFactory implementation="idea.goyacc.GoYaccFileTypeFactory"/>
     <lang.parserDefinition language="GoYacc" implementationClass="idea.goyacc.GoYaccParserDefinition"/>
     <lang.syntaxHighlighterFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccSyntaxHighlighterFactory"/>
+    <lang.braceMatcher language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccBraceMatcher"/>
     <codeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccCodeStyleSettingsProvider"/>
     <langCodeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccLanguageCodeStyleSettingsProvider"/>
   </extensions>
