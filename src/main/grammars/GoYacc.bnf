@@ -19,42 +19,42 @@
 spec ::= decl_list rule_list tail_code?
 
 
-decl_list ::= (elem_decl | misc_decl)*
+decl_list ::= (token_decl | prec_decl | type_decl | start_decl | union_decl | code_decl | misc_decl)*
 
-elem_decl ::= reserved_word tag? elem_list? {
-    pin=1 recoverWhile=decl_recover
-}
-misc_decl ::= START IDENT | ERROR_VERBOSE | LCURL GO_CODE RCURL | UNION BEGIN GO_CODE END {
-    pin=1 recoverWhile=decl_recover
-}
-private decl_recover ::= !(reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
+field ::= '<' IDENT '>' {pin=1 recoverWhile=type_recover}
+private type_recover ::= !(IDENT)
 
-reserved_word ::= TOKEN | LEFT | RIGHT | NONASSOC | TYPE | PRECEDENCE
+private prec_word ::= LEFT | RIGHT | NONASSOC | PRECEDENCE
+private decl_word ::= (prec_word | TOKEN | TYPE | START | UNION | LCURL | ERROR_VERBOSE)
+private decl_recover ::= !(decl_word | START_RULES)
 
-tag ::= '<' IDENT '>' {
-    pin=1 recoverWhile=tag_recover
-}
-private tag_recover ::= !(IDENT | reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
+token_decl ::= TOKEN field? token_list {pin=1 recoverWhile=decl_recover}
+prec_decl  ::= prec_word field? token_list {pin=1 recoverWhile=decl_recover}
+type_decl  ::= TYPE field symbol_list {pin=1 recoverWhile=decl_recover}
+union_decl ::= UNION BEGIN GO_CODE END {pin=1 recoverWhile=decl_recover}
+start_decl ::= START IDENT {pin=1 recoverWhile=decl_recover}
+code_decl  ::= LCURL GO_CODE RCURL {pin=1 recoverWhile=decl_recover}
+misc_decl  ::= ERROR_VERBOSE {pin=1 recoverWhile=decl_recover}
 
-elem ::= IDENT NUM_LIT? STR_LIT? {
-    pin=1 recoverWhile=elem_recover //methods=[getElemName getElemAlias]
-}
-private elem_list ::= elem+ | elem (',' elem)*
-private elem_recover ::= !(',' | IDENT | reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
+private token_list ::= token+ | token (',' token)*
+token ::= IDENT NUM_LIT? STR_LIT? {pin=1 recoverWhile=token_recover}
+private token_recover ::= !(',' | IDENT | decl_word | START_RULES)
+
+private symbol_list ::= symbol+ | symbol (',' symbol)*
+symbol ::= IDENT STR_LIT? {pin=1 recoverWhile=symbol_recover}
+private symbol_recover ::= !(',' | IDENT | decl_word | START_RULES)
 
 
 rule_list ::= START_RULES rule+ {pin=1}
 
-rule ::= C_IDENT ':' rule_alt ('|' rule_alt)* ';'? {
-    pin=2 recoverWhile=rule_recover
-}
-rule_alt ::= rule_elem* rule_prec? {recoverWhile=rule_alt_recover}
-private rule_recover ::= !(C_IDENT|START_TAIL)
-private rule_alt_recover ::= !(';' | '|' | C_IDENT | START_TAIL)
-
+rule ::= C_IDENT ':' rule_alt ('|' rule_alt)* { pin=2 recoverWhile=rule_recover }
+rule_alt ::= rule_elem* rule_prec? ';'? {recoverWhile=rule_alt_recover}
 rule_elem ::= IDENT | STR_LIT | action
-rule_prec ::= PREC IDENT action? {pin=2}
+rule_prec ::= PREC IDENT action? {pin=1}
 action ::= BEGIN GO_CODE END {pin=1 recoverWhile=action_recover}
+
+private rule_recover ::= !(C_IDENT | START_TAIL)
+private rule_alt_recover ::= !(';' | '|' | C_IDENT | START_TAIL)
 private action_recover ::= !(';' | '|' | BEGIN | IDENT | STR_LIT | PREC | C_IDENT | START_TAIL)
 
 
