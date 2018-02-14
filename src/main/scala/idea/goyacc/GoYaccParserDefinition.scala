@@ -18,8 +18,8 @@ class GoYaccParserDefinition extends ParserDefinition {
   override def createParser(project: Project): PsiParser = new GoYaccParser()
 
   override def getFileNodeType: IFileElementType = FILE_TYPE
-  override def getCommentTokens: TokenSet = COMMENT_TOKENS
-  override def getStringLiteralElements: TokenSet = STRING_TOKENS
+  override def getCommentTokens: TokenSet = Comments
+  override def getStringLiteralElements: TokenSet = StringLiterals
 
   override def spaceExistanceTypeBetweenTokens(left: ASTNode, right: ASTNode): ParserDefinition.SpaceRequirements = {
     SpaceRequirements.MAY
@@ -30,7 +30,7 @@ object GoYaccParserDefinition {
 
   val FILE_TYPE = new IFileElementType(GoYaccLanguage)
 
-  val COMMENT_TOKENS: TokenSet = TokenSet.create(GoYaccTypeExt.COMMENT)
-  val STRING_TOKENS: TokenSet = TokenSet.create(GoYaccType.STR_LITERAL)
+  val Comments: TokenSet = TokenSet.create(GoYaccTypeExt.COMMENT)
+  val StringLiterals: TokenSet = TokenSet.create(GoYaccType.STR_LIT)
 
 }

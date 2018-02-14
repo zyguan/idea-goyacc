@@ -8,7 +8,7 @@
     psiPackage="idea.goyacc.psi"
     psiImplClassSuffix="Impl"
     psiImplPackage="idea.goyacc.psi.impl"
-    psiImplUtilClass="idea.goyacc.psi.GoYaccPsiUtil"
+    //psiImplUtilClass="idea.goyacc.psi.GoYaccPsiUtil"
 
     elementTypeHolderClass="idea.goyacc.psi.GoYaccType"
     elementTypeFactory="idea.goyacc.psi.GoYaccTypeFactory.newElementType"
@@ -24,38 +24,38 @@ decl_list ::= (elem_decl | misc_decl)*
 elem_decl ::= reserved_word tag? elem_list? {
     pin=1 recoverWhile=decl_recover
 }
-misc_decl ::= START IDENTIFIER | ERROR_VERBOSE | LCURL GO_CODE RCURL | UNION BEGIN GO_CODE END {
+misc_decl ::= START IDENT | ERROR_VERBOSE | LCURL GO_CODE RCURL | UNION BEGIN GO_CODE END {
     pin=1 recoverWhile=decl_recover
 }
 private decl_recover ::= !(reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
 
 reserved_word ::= TOKEN | LEFT | RIGHT | NONASSOC | TYPE | PRECEDENCE
 
-tag ::= '<' IDENTIFIER '>' {
+tag ::= '<' IDENT '>' {
     pin=1 recoverWhile=tag_recover
 }
-private tag_recover ::= !(IDENTIFIER | reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
+private tag_recover ::= !(IDENT | reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
 
-elem ::= IDENTIFIER NUMBER? STR_LITERAL? {
-    pin=1 recoverWhile=elem_recover methods=[getElemName getElemAlias]
+elem ::= IDENT NUM_LIT? STR_LIT? {
+    pin=1 recoverWhile=elem_recover //methods=[getElemName getElemAlias]
 }
 private elem_list ::= elem+ | elem (',' elem)*
-private elem_recover ::= !(',' | IDENTIFIER | reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
+private elem_recover ::= !(',' | IDENT | reserved_word | START | LCURL | UNION | ERROR_VERBOSE | START_RULES)
 
 
 rule_list ::= START_RULES rule+ {pin=1}
 
-rule ::= RULE_NAME ':' rule_alt ('|' rule_alt)* ';'? {
+rule ::= C_IDENT ':' rule_alt ('|' rule_alt)* ';'? {
     pin=2 recoverWhile=rule_recover
 }
 rule_alt ::= rule_elem* rule_prec? {recoverWhile=rule_alt_recover}
-private rule_recover ::= !(RULE_NAME|START_TAIL)
-private rule_alt_recover ::= !(';' | '|' | RULE_NAME | START_TAIL)
+private rule_recover ::= !(C_IDENT|START_TAIL)
+private rule_alt_recover ::= !(';' | '|' | C_IDENT | START_TAIL)
 
-rule_elem ::= IDENTIFIER | STR_LITERAL | action
-rule_prec ::= PREC IDENTIFIER action? {pin=2}
-action ::= BEGIN (GO_CODE|DLR)* END {pin=1 recoverWhile=action_recover}
-private action_recover ::= !(';' | '|' | BEGIN | IDENTIFIER | STR_LITERAL | PREC | RULE_NAME | START_TAIL)
+rule_elem ::= IDENT | STR_LIT | action
+rule_prec ::= PREC IDENT action? {pin=2}
+action ::= BEGIN GO_CODE END {pin=1 recoverWhile=action_recover}
+private action_recover ::= !(';' | '|' | BEGIN | IDENT | STR_LIT | PREC | C_IDENT | START_TAIL)
 
 
 tail_code ::= START_TAIL GO_CODE?

@@ -16,7 +16,6 @@ object GoYaccSyntaxHighlighter extends SyntaxHighlighterBase {
   import idea.goyacc.psi.GoYaccType._
   import idea.goyacc.psi.GoYaccTypeExt._
 
-
   val Identifier: TextAttributesKey = createTextAttributesKey("Y_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
   val Keyword: TextAttributesKey = createTextAttributesKey("Y_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
   val Comment: TextAttributesKey = createTextAttributesKey("Y_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
@@ -26,20 +25,19 @@ object GoYaccSyntaxHighlighter extends SyntaxHighlighterBase {
   val Angles: TextAttributesKey = createTextAttributesKey("Y_ANGLES", DefaultLanguageHighlighterColors.PARENTHESES)
   val Sign: TextAttributesKey = createTextAttributesKey("Y_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
   val Rule: TextAttributesKey = createTextAttributesKey("Y_RULE", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
-  val Code: TextAttributesKey = createTextAttributesKey("Y_CODE", DefaultLanguageHighlighterColors.DOC_COMMENT)
-  val Ref: TextAttributesKey = createTextAttributesKey("Y_DLR", DefaultLanguageHighlighterColors.DOC_COMMENT_TAG_VALUE)
+  val Code: TextAttributesKey = createTextAttributesKey("Y_CODE", DefaultLanguageHighlighterColors.BLOCK_COMMENT)
 
   override def getHighlightingLexer: Lexer = new GoYaccLexer()
 
   override def getTokenHighlights(tokenType: IElementType): Array[TextAttributesKey] =
     tokenType match {
-      case IDENTIFIER =>
+      case IDENT =>
         pack(Identifier)
       case COMMENT =>
         pack(Comment)
-      case UNION | LEFT | RIGHT | LCURL | RCURL | NONASSOC | PRECEDENCE | PREC | TOKEN | TYPE | ERROR_VERBOSE =>
+      case UNION | LEFT | RIGHT | LCURL | RCURL | START | NONASSOC | PRECEDENCE | PREC | TOKEN | TYPE | ERROR_VERBOSE =>
         pack(Keyword)
-      case STR_LITERAL =>
+      case STR_LIT =>
         pack(String)
       case START | END =>
         pack(Braces)
@@ -47,12 +45,10 @@ object GoYaccSyntaxHighlighter extends SyntaxHighlighterBase {
         pack(Angles)
       case COLON =>
         pack(Sign)
-      case RULE_NAME =>
+      case C_IDENT =>
         pack(Rule)
       case GO_CODE =>
         pack(Code)
-      case DLR =>
-        pack(Ref)
       case _ =>
         Array.empty
     }

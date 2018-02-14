@@ -28,6 +28,8 @@
     <fileTypeFactory implementation="idea.goyacc.GoYaccFileTypeFactory"/>
     <lang.parserDefinition language="GoYacc" implementationClass="idea.goyacc.GoYaccParserDefinition"/>
     <lang.syntaxHighlighterFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccSyntaxHighlighterFactory"/>
+    <codeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccCodeStyleSettingsProvider"/>
+    <langCodeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccLanguageCodeStyleSettingsProvider"/>
   </extensions>
 
   <actions>
