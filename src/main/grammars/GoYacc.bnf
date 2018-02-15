@@ -54,8 +54,8 @@ rule_prec ::= PREC IDENT action? {pin=1}
 action ::= BEGIN GO_CODE END {pin=1 recoverWhile=action_recover}
 
 private rule_recover ::= !(C_IDENT | START_TAIL)
-private rule_alt_recover ::= !(';' | '|' | C_IDENT | START_TAIL)
-private action_recover ::= !(';' | '|' | BEGIN | IDENT | STR_LIT | PREC | C_IDENT | START_TAIL)
+private rule_alt_recover ::= !('|' | C_IDENT | START_TAIL)
+private action_recover ::= !(';' | '|' | BEGIN | STR_LIT | IDENT | C_IDENT | PREC | START_TAIL)
 
 
 tail_code ::= START_TAIL GO_CODE?
