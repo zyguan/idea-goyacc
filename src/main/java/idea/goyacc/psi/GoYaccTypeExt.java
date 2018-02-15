@@ -5,7 +5,8 @@ import com.intellij.psi.tree.IElementType;
 public interface GoYaccTypeExt {
 
     IElementType UNCLOSED = GoYaccTypeFactory.newTokenType("UNCLOSED");
-    IElementType COMMENT = GoYaccTypeFactory.newTokenType("COMMENT");
+    IElementType LINE_COMMENT = GoYaccTypeFactory.newTokenType("LINE_COMMENT");
+    IElementType BLOCK_COMMENT = GoYaccTypeFactory.newTokenType("BLOCK_COMMENT");
     IElementType COMMA = GoYaccTypeFactory.newTokenType("COMMA");
     IElementType COLON = GoYaccTypeFactory.newTokenType("COLON");
     IElementType SEMI = GoYaccTypeFactory.newTokenType("SEMI");

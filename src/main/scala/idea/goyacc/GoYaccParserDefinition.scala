@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.tree.{IFileElementType, TokenSet}
 import com.intellij.psi.{FileViewProvider, PsiElement, PsiFile}
 import idea.goyacc.ast.{GoYaccLexer, GoYaccParser}
-import idea.goyacc.psi.{GoYaccFile, GoYaccType, GoYaccTypeExt}
+import idea.goyacc.psi.{GoYaccFile, GoYaccType}
 
 class GoYaccParserDefinition extends ParserDefinition {
   import GoYaccParserDefinition._
@@ -27,10 +27,12 @@ class GoYaccParserDefinition extends ParserDefinition {
 }
 
 object GoYaccParserDefinition {
+  import GoYaccType._
+  import idea.goyacc.psi.GoYaccTypeExt._
 
   val FILE_TYPE = new IFileElementType(GoYaccLanguage)
 
-  val Comments: TokenSet = TokenSet.create(GoYaccTypeExt.COMMENT)
-  val StringLiterals: TokenSet = TokenSet.create(GoYaccType.STR_LIT)
+  val Comments: TokenSet = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT)
+  val StringLiterals: TokenSet = TokenSet.create(STR_LIT)
 
 }

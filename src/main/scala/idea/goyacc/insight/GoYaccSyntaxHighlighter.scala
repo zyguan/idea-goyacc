@@ -33,7 +33,7 @@ object GoYaccSyntaxHighlighter extends SyntaxHighlighterBase {
     tokenType match {
       case IDENT =>
         pack(Identifier)
-      case COMMENT =>
+      case LINE_COMMENT | BLOCK_COMMENT =>
         pack(Comment)
       case UNION | LEFT | RIGHT | LCURL | RCURL | START | NONASSOC | PRECEDENCE | PREC | TOKEN | TYPE | ERROR_VERBOSE =>
         pack(Keyword)

@@ -101,8 +101,8 @@ GO_CODE    = ({GO_REST}|{STR_LIT_SQ}|{STR_LIT_DQ}|{COMMENT_L}|{COMMENT_B})+
     {STR_LIT}   { return GoYaccType.STR_LIT; }
     {NUM_LIT}   { return GoYaccType.NUM_LIT; }
     {IDENT}     { return GoYaccType.IDENT; }
-    {COMMENT_B} { return GoYaccTypeExt.COMMENT; }
-    {COMMENT_L} { return GoYaccTypeExt.COMMENT; }
+    {COMMENT_B} { return GoYaccTypeExt.LINE_COMMENT; }
+    {COMMENT_L} { return GoYaccTypeExt.BLOCK_COMMENT; }
     {WSNL}+     { return TokenType.WHITE_SPACE; }
 }
 
