@@ -65,23 +65,35 @@ class GoYaccFoldingBuilder extends FoldingBuilderEx {
   override def isCollapsedByDefault(node: ASTNode): Boolean = false
 
   override def buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array[FoldingDescriptor] = {
-    import scala.collection.JavaConverters.collectionAsScalaIterable
-
-    val actions = collectionAsScalaIterable(PsiTreeUtil.findChildrenOfType(root, classOf[GoYaccAction]))
-      .filter(_.getGoCode != null)
-      .map(action => new FoldingDescriptor(action.getGoCode, action.getGoCode.getTextRange))
-
-    val tokens = collectionAsScalaIterable(PsiTreeUtil.findChildrenOfType(root, classOf[GoYaccTokenDecl]))
-      .filter(_.getTokenList.size() > 1)
-      .map(toks => new FoldingDescriptor(
-        toks, new TextRange(toks.getTokenList.get(0).getTextRange.getStartOffset, toks.getTextRange.getEndOffset)))
-
-    val types = collectionAsScalaIterable(PsiTreeUtil.findChildrenOfType(root, classOf[GoYaccTypeDecl]))
-      .filter(_.getSymbolList.size() > 1)
-      .map(syms => new FoldingDescriptor(
-        syms, new TextRange(syms.getSymbolList.get(0).getTextRange.getStartOffset, syms.getTextRange.getEndOffset)))
-
-    Seq(actions, tokens, types).flatten.toArray
+    PsiTreeUtil.findChildrenOfAnyType(root,
+      classOf[GoYaccRule], classOf[GoYaccAction], classOf[GoYaccTokenDecl], classOf[GoYaccTypeDecl])
+      .toArray()
+      .filter {
+        case _: GoYaccRule => true
+        case action: GoYaccAction => action.getGoCode != null
+        case decl: GoYaccTokenDecl => decl.getTokenList.size() > 1
+        case decl: GoYaccTypeDecl => decl.getSymbolList.size() > 1
+        case _ => false
+      }
+      .map {
+        case rule: GoYaccRule =>
+          new FoldingDescriptor(rule, new TextRange(
+            rule.getFirstChild.getTextRange.getEndOffset, rule.getTextRange.getEndOffset))
+        case action: GoYaccAction =>
+          new FoldingDescriptor(action, action.getGoCode.getTextRange)
+        case decl: GoYaccTokenDecl =>
+          val field = decl.getField
+          val start =
+            if (field != null) field.getNextSibling.getTextRange.getStartOffset
+            else decl.getFirstChild.getNextSibling.getTextRange.getStartOffset
+          new FoldingDescriptor(decl, new TextRange(start, decl.getTextRange.getEndOffset))
+        case decl: GoYaccTypeDecl =>
+          val field = decl.getField
+          val start =
+            if (field != null) field.getNextSibling.getTextRange.getStartOffset
+            else decl.getFirstChild.getNextSibling.getTextRange.getStartOffset
+          new FoldingDescriptor(decl, new TextRange(start, decl.getTextRange.getEndOffset))
+      }
   }
 
 }
