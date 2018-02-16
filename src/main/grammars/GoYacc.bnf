@@ -8,7 +8,7 @@
     psiPackage="idea.goyacc.psi"
     psiImplClassSuffix="Impl"
     psiImplPackage="idea.goyacc.psi.impl"
-    //psiImplUtilClass="idea.goyacc.psi.GoYaccPsiUtil"
+    psiImplUtilClass="idea.goyacc.psi.GoYaccPsiUtil"
 
     elementTypeHolderClass="idea.goyacc.psi.GoYaccType"
     elementTypeFactory="idea.goyacc.psi.GoYaccTypeFactory.newElementType"

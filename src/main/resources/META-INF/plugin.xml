@@ -31,6 +31,7 @@
     <lang.braceMatcher language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccBraceMatcher"/>
     <lang.commenter language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccCommenter"/>
     <lang.foldingBuilder language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccFoldingBuilder"/>
+    <lang.psiStructureViewFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccStructureViewFactory"/>
     <codeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccCodeStyleSettingsProvider"/>
     <langCodeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccLanguageCodeStyleSettingsProvider"/>
   </extensions>
