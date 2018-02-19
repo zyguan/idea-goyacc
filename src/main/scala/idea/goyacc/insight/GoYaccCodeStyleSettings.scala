@@ -1,4 +1,4 @@
-package idea.goyacc.format
+package idea.goyacc.insight
 
 import com.intellij.application.options._
 import com.intellij.lang.Language
@@ -93,12 +93,5 @@ class GoYaccLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsP
   }
 
   override def getIndentOptionsEditor: IndentOptionsEditor = new SmartIndentOptionsEditor()
-
-//  override def customizeSettings(consumer: CodeStyleSettingsCustomizable,
-//                                 settingsType: LanguageCodeStyleSettingsProvider.SettingsType): Unit =
-//    settingsType match {
-//      case SettingsType.INDENT_SETTINGS =>
-//      case _ =>
-//    }
 
 }

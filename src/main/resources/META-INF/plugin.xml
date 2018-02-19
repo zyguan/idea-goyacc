@@ -32,8 +32,11 @@
     <lang.commenter language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccCommenter"/>
     <lang.foldingBuilder language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccFoldingBuilder"/>
     <lang.psiStructureViewFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccStructureViewFactory"/>
-    <codeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccCodeStyleSettingsProvider"/>
-    <langCodeStyleSettingsProvider implementation="idea.goyacc.format.GoYaccLanguageCodeStyleSettingsProvider"/>
+    <lang.namesValidator language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccNamesValitor"/>
+    <lang.findUsagesProvider language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccFindUsagesProvider"/>
+    <renamePsiElementProcessor implementation="idea.goyacc.insight.GoYaccRenameSpecialElementProcessor"/>
+    <codeStyleSettingsProvider implementation="idea.goyacc.insight.GoYaccCodeStyleSettingsProvider"/>
+    <langCodeStyleSettingsProvider implementation="idea.goyacc.insight.GoYaccLanguageCodeStyleSettingsProvider"/>
   </extensions>
 
   <actions>

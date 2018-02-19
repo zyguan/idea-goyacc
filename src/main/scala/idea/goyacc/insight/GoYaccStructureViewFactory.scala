@@ -79,8 +79,8 @@ class GoYaccStructureViewElement(element: PsiElement) extends PsiTreeElementBase
       decl.getTokenList.forEach(t => ts.add(new GoYaccStructureViewElement(t)))
       ts
     case decl: GoYaccTypeDecl =>
-      val ts = new util.ArrayList[StructureViewTreeElement](decl.getSymbolList.size())
-      decl.getSymbolList.forEach(t => ts.add(new GoYaccStructureViewElement(t)))
+      val ts = new util.ArrayList[StructureViewTreeElement](decl.getNonterminalList.size())
+      decl.getNonterminalList.forEach(t => ts.add(new GoYaccStructureViewElement(t)))
       ts
     case _ =>
       Collections.emptyList()

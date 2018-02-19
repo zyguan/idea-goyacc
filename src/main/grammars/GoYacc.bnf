@@ -32,32 +32,50 @@ private decl_recover ::= !(decl_word | START_RULES)
 
 token_decl ::= TOKEN field? token_list {pin=1 recoverWhile=decl_recover}
 prec_decl  ::= prec_word field? token_list {pin=1 recoverWhile=decl_recover}
-type_decl  ::= TYPE field symbol_list {pin=1 recoverWhile=decl_recover}
+type_decl  ::= TYPE field nonterminal_list {pin=1 recoverWhile=decl_recover}
 union_decl ::= UNION BEGIN GO_CODE? END {pin=1 recoverWhile=decl_recover}
 start_decl ::= START IDENT {pin=1 recoverWhile=decl_recover}
 code_decl  ::= LCURL GO_CODE? RCURL {pin=1 recoverWhile=decl_recover}
 misc_decl  ::= ERROR_VERBOSE {recoverWhile=decl_recover}
 
 private token_list ::= token+ | token (',' token)*
-token ::= IDENT NUM_LIT? STR_LIT? {pin=1 recoverWhile=token_recover}
+token ::= token_name token_code? token_alias? {pin=1 recoverWhile=token_recover}
+token_name ::= IDENT {
+    implements="idea.goyacc.psi.GoYaccNamedElement"
+    methods=[getName setName getNameIdentifier]
+}
+token_code ::= NUM_LIT
+token_alias ::= STR_LIT {
+    implements="idea.goyacc.psi.GoYaccNamedElement"
+    methods=[getName setName getNameIdentifier]
+}
 private token_recover ::= !(',' | IDENT | decl_word | START_RULES)
 
-private symbol_list ::= symbol+ | symbol (',' symbol)*
-symbol ::= IDENT STR_LIT? {pin=1 recoverWhile=symbol_recover}
-private symbol_recover ::= !(',' | IDENT | decl_word | START_RULES)
+private nonterminal_list ::= nonterminal+ | nonterminal (',' nonterminal)*
+nonterminal ::= nonterminal_name nonterminal_note? {pin=1 recoverWhile=nonterminal_recover}
+nonterminal_name ::= IDENT {methods=[getReference]}
+nonterminal_note ::= STR_LIT
+private nonterminal_recover ::= !(',' | IDENT | decl_word | START_RULES)
 
 
 rule_list ::= START_RULES rule+ {pin=1}
 
-rule ::= C_IDENT ':' rule_alt ('|' rule_alt)* {pin=2 recoverWhile=rule_recover}
-rule_alt ::= rule_elem* rule_prec? ';'? {recoverWhile=rule_alt_recover}
-rule_elem ::= IDENT | STR_LIT | action
-rule_prec ::= PREC IDENT action? {pin=1}
-action ::= BEGIN GO_CODE END {pin=1 recoverWhile=action_recover}
+rule ::= C_IDENT ':' rule_alt ('|' rule_alt)* {
+    pin=2 recoverWhile=rule_recover
+    implements="idea.goyacc.psi.GoYaccNamedElement"
+    methods=[getName setName getNameIdentifier]
+}
+rule_alt ::= (rule_elem|rule_action)* rule_prec? rule_action? ';'? {recoverWhile=rule_alt_recover}
+rule_elem ::= alias | symbol
+rule_prec ::= PREC symbol {pin=1 recoverWhile=rule_prec_recover}
+rule_action ::= BEGIN GO_CODE END {pin=1 recoverWhile=rule_action_recover}
+alias  ::= STR_LIT {methods=[getReference]}
+symbol ::= IDENT {methods=[getReference]}
 
 private rule_recover ::= !(C_IDENT | START_TAIL)
 private rule_alt_recover ::= !('|' | C_IDENT | START_TAIL)
-private action_recover ::= !(';' | '|' | BEGIN | STR_LIT | IDENT | C_IDENT | PREC | START_TAIL)
+private rule_prec_recover ::= !(';' | '|' | BEGIN | C_IDENT | START_TAIL)
+private rule_action_recover ::= !(';' | '|' | BEGIN | C_IDENT | IDENT | PREC | START_TAIL | STR_LIT)
 
 
 tail_code ::= START_TAIL GO_CODE? {pin=1}

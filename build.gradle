@@ -59,7 +59,14 @@ task initGenerate(type: GenerateParser) {
 }
 
 task initCompile(type: ScalaCompile) {
-    source = sourceSets.main.scala.srcDirs
+    source = fileTree(dir: 'src/main',
+            includes: [
+                    'scala/**/GoYaccLanguage.scala',
+                    'scala/**/psi/GoYaccPsiUtil.scala',
+                    'scala/**/psi/GoYaccRefs.scala',
+                    'java/**/psi/GoYaccNamedElement.java',
+                    'gen/**/psi/*.java'],
+            excludes: ['gen/**/GoYaccType.java'])
     classpath = sourceSets.main.compileClasspath
     destinationDir = sourceSets.main.scala.outputDir
     doLast {

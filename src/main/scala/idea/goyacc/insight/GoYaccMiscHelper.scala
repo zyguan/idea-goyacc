@@ -1,8 +1,10 @@
 package idea.goyacc.insight
 
 import com.intellij.lang.folding.{FoldingBuilderEx, FoldingDescriptor}
+import com.intellij.lang.refactoring.NamesValidator
 import com.intellij.lang.{ASTNode, BracePair, CodeDocumentationAwareCommenter, PairedBraceMatcher}
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
@@ -66,20 +68,20 @@ class GoYaccFoldingBuilder extends FoldingBuilderEx {
 
   override def buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array[FoldingDescriptor] = {
     PsiTreeUtil.findChildrenOfAnyType(root,
-      classOf[GoYaccRule], classOf[GoYaccAction], classOf[GoYaccTokenDecl], classOf[GoYaccTypeDecl])
+      classOf[GoYaccRule], classOf[GoYaccRuleAction], classOf[GoYaccTokenDecl], classOf[GoYaccTypeDecl])
       .toArray()
       .filter {
         case _: GoYaccRule => true
-        case action: GoYaccAction => action.getGoCode != null
+        case action: GoYaccRuleAction => action.getGoCode != null
         case decl: GoYaccTokenDecl => decl.getTokenList.size() > 1
-        case decl: GoYaccTypeDecl => decl.getSymbolList.size() > 1
+        case decl: GoYaccTypeDecl => decl.getNonterminalList.size() > 1
         case _ => false
       }
       .map {
         case rule: GoYaccRule =>
           new FoldingDescriptor(rule, new TextRange(
             rule.getFirstChild.getTextRange.getEndOffset, rule.getTextRange.getEndOffset))
-        case action: GoYaccAction =>
+        case action: GoYaccRuleAction =>
           new FoldingDescriptor(action, action.getGoCode.getTextRange)
         case decl: GoYaccTokenDecl =>
           val field = decl.getField
