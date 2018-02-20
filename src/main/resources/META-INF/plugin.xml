@@ -34,7 +34,7 @@
     <lang.psiStructureViewFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccStructureViewFactory"/>
     <lang.namesValidator language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccNamesValitor"/>
     <lang.findUsagesProvider language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccFindUsagesProvider"/>
-    <renamePsiElementProcessor implementation="idea.goyacc.insight.GoYaccRenameSpecialElementProcessor"/>
+    <referencesSearch implementation="idea.goyacc.insight.GoYaccSpecialReferenceSearcher"/>
     <codeStyleSettingsProvider implementation="idea.goyacc.insight.GoYaccCodeStyleSettingsProvider"/>
     <langCodeStyleSettingsProvider implementation="idea.goyacc.insight.GoYaccLanguageCodeStyleSettingsProvider"/>
   </extensions>

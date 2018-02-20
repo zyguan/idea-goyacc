@@ -1,14 +1,13 @@
 package idea.goyacc.psi
 
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.util.{CachedValueProvider, CachedValuesManager, PsiTreeUtil}
-import com.intellij.psi._
-import idea.goyacc.GoYaccLanguage
 import java.util
 import java.util.Collections
 
-import com.intellij.lang.refactoring.NamesValidator
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.{Key, TextRange}
+import com.intellij.psi._
+import com.intellij.psi.util.{CachedValue, CachedValueProvider, CachedValuesManager, PsiTreeUtil}
+import idea.goyacc.GoYaccLanguage
 
 import scala.collection.mutable
 
@@ -43,22 +42,29 @@ object GoYaccPsiUtil {
   def getReference(elem: GoYaccSymbol): PsiReference = new GoYaccSymbolRef(elem)
 
   class GoYaccSymbolRef(elem: PsiElement)
-    extends PsiReferenceBase[PsiElement](elem, TextRange.from(0, elem.getTextRange.getLength))
-    with GoYaccRef {
+    extends PsiReferenceBase[PsiElement](elem, TextRange.from(0, elem.getTextRange.getLength)) {
 
     val key: String = elem.getText.substring(
       getRangeInElement.getStartOffset, getRangeInElement.getEndOffset)
 
-    override def file: PsiFile = elem.getContainingFile
+    implicit val file: PsiFile = elem.getContainingFile
 
     override def resolve(): PsiElement =
       if (key.startsWith("'"))
-        tokens.find(_.getTokenName.getName == key).map(_.getTokenName).orNull
+        cached(resolveTokens)
+          .find(_.getTokenName.getName == key)
+          .map(_.getTokenName)
+          .orNull
       else
-        rules.find(_.getName == key).orElse(tokens.find(_.getTokenName.getName == key).map(_.getTokenName)).orNull
+        cached(resolveRules)
+          .find(_.getName == key)
+          .orElse(cached(resolveTokens)
+            .find(_.getTokenName.getName == key)
+            .map(_.getTokenName.asInstanceOf[PsiElement]))
+          .orNull
 
     override def getVariants: Array[AnyRef] =
-      rules.map(_.getName).toArray
+      cached(resolveRules).map(_.getName).toArray
 
     override def handleElementRename(newElementName: String): PsiElement =
       elem.getFirstChild.replace(createIdent(elem.getProject, newElementName))
@@ -68,37 +74,34 @@ object GoYaccPsiUtil {
   def getReference(elem: GoYaccAlias): PsiReference = new GoYaccAliasRef(elem)
 
   class GoYaccAliasRef(elem: GoYaccAlias)
-    extends PsiReferenceBase[PsiElement](elem, TextRange.from(0, elem.getTextRange.getLength))
-    with GoYaccRef {
+    extends PsiReferenceBase[PsiElement](elem, TextRange.from(0, elem.getTextRange.getLength)) {
 
     val key: String = elem.getText.substring(
       getRangeInElement.getStartOffset, getRangeInElement.getEndOffset)
 
-    override def file: PsiFile = elem.getContainingFile
+    implicit val file: PsiFile = elem.getContainingFile
 
     override def resolve(): PsiElement =
-      tokens.find(tok => tok.getTokenAlias != null && tok.getTokenAlias.getName == key).map(_.getTokenAlias).orNull
+      cached(resolveTokens)
+        .find(tok => tok.getTokenAlias != null && tok.getTokenAlias.getName == key)
+        .map(_.getTokenAlias)
+        .orNull
 
     override def getVariants: Array[AnyRef] =
-      tokens.filter(_.getTokenAlias != null).map(_.getTokenAlias.getName).toArray
+      cached(resolveTokens)
+        .filter(_.getTokenAlias != null)
+        .map(_.getTokenAlias.getName)
+        .toArray
 
     override def handleElementRename(newElementName: String): PsiElement =
       elem.getFirstChild.replace(createStrLit(elem.getProject, newElementName))
   }
 
-
-  trait GoYaccRef {
+  def cached[T](resolve: (PsiFile) => util.List[T])(implicit file: PsiFile): mutable.Buffer[T] = {
     import scala.collection.JavaConverters._
-
-    def file: PsiFile
-
-    def rules: mutable.Buffer[GoYaccRule] =
-      CachedValuesManager.getCachedValue(file, () =>
-        CachedValueProvider.Result.create(resolveRules(file).asScala, file))
-
-    def tokens: mutable.Buffer[GoYaccToken] =
-      CachedValuesManager.getCachedValue(file, () =>
-        CachedValueProvider.Result.create(resolveTokens(file).asScala, file))
+    CachedValuesManager.getCachedValue(file,
+      Key.create[CachedValue[mutable.Buffer[T]]](resolve.getClass.toString),
+      () => CachedValueProvider.Result.create(resolve(file).asScala, file))
   }
 
   def resolveRules(file: PsiFile): util.List[GoYaccRule] = {

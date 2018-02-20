@@ -32,7 +32,7 @@ class GoYaccStructureViewModel(file: PsiFile)
   override def isAlwaysLeaf(element: StructureViewTreeElement): Boolean = element.getValue match {
     case _: GoYaccRule => true
     case _: GoYaccToken => true
-    case _: GoYaccSymbol => true
+    case _: GoYaccNonterminal => true
     case _ => false
   }
 
@@ -49,8 +49,8 @@ class GoYaccStructureViewElement(element: PsiElement) extends PsiTreeElementBase
     case decl: GoYaccTokenDecl => s"Tokens :: ${decl.getField.getText}"
     case decl: GoYaccPrecDecl => s"Tokens :: ${decl.getField.getText} ${decl.getFirstChild.getText}"
     case decl: GoYaccTypeDecl => s"Types :: ${decl.getField.getText}"
-    case tok: GoYaccToken => tok.getFirstChild.getText
-    case sym: GoYaccSymbol => sym.getFirstChild.getText
+    case tok: GoYaccToken => tok.getTokenName.getText
+    case sym: GoYaccNonterminal => sym.getNonterminalName.getText
     case _ => element.toString
   }
 
@@ -93,7 +93,7 @@ class GoYaccStructureViewElement(element: PsiElement) extends PsiTreeElementBase
     case _: GoYaccPrecDecl => PlatformIcons.SOURCE_FOLDERS_ICON
     case _: GoYaccTypeDecl => PlatformIcons.TEST_SOURCE_FOLDER
     case _: GoYaccToken => PlatformIcons.CLASS_ICON
-    case _: GoYaccSymbol => PlatformIcons.FIELD_ICON
+    case _: GoYaccNonterminal => PlatformIcons.FIELD_ICON
     case _ => null
   }
 }

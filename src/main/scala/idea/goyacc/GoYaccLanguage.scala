@@ -11,7 +11,7 @@ object GoYaccLanguage extends Language("GoYacc") {
 }
 
 object GoYaccFileType extends LanguageFileType(GoYaccLanguage) {
-  override def getName: String = "Go Yacc File"
+  override def getName: String = "Go Yacc"
   override def getDescription: String = "The file for goyacc language"
   override def getDefaultExtension: String = "y"
   override def getIcon: Icon = GoYaccLanguage.ICON

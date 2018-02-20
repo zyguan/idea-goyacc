@@ -1,15 +1,16 @@
 package idea.goyacc.insight
 
-import java.util
 import java.util.regex.Pattern
 
 import com.intellij.lang.cacheBuilder.{DefaultWordsScanner, WordsScanner}
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.lang.refactoring.NamesValidator
+import com.intellij.openapi.application.{QueryExecutorBase, ReadAction}
 import com.intellij.openapi.project.Project
+import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.{PsiElement, PsiNamedElement, PsiRecursiveElementWalkingVisitor, PsiReference}
-import com.intellij.refactoring.rename.RenamePsiElementProcessor
+import com.intellij.util.Processor
 import idea.goyacc.ast.GoYaccLexer
 import idea.goyacc.psi._
 
@@ -64,29 +65,24 @@ class GoYaccNamesValitor extends NamesValidator {
     else false
 }
 
-class GoYaccRenameSpecialElementProcessor extends RenamePsiElementProcessor {
-  override def canProcessElement(element: PsiElement): Boolean = element match {
-    case named: GoYaccNamedElement =>
-      val c = named.getName.charAt(0)
-      c == '\'' || c == '"'
-    case _ => false
-  }
 
-  override def findReferences(element: PsiElement): util.Collection[PsiReference] = {
-    val result = new util.ArrayList[PsiReference]()
-    val key = element.getFirstChild.getText
-    element.getContainingFile.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
-      override def visitElement(elem: PsiElement): Unit = elem match {
-        case _: GoYaccRuleElem => super.visitElement(elem)
-        case _: GoYaccAlias if elem.getText == key => result.add(elem.getReference)
-        case _: GoYaccSymbol if elem.getText == key => result.add(elem.getReference)
-        case _: GoYaccRuleAlt => super.visitElement(elem)
-        case _: GoYaccRule => super.visitElement(elem)
-        case _: GoYaccRuleList => super.visitElement(elem)
-        case _ =>
-      }
-    })
-    result
-  }
-
+class GoYaccSpecialReferenceSearcher extends QueryExecutorBase[PsiReference, ReferencesSearch.SearchParameters] {
+  override def processQuery(params: ReferencesSearch.SearchParameters, consumer: Processor[PsiReference]): Unit =
+    params.getElementToSearch match {
+      case elem: GoYaccNamedElement if elem.getName.startsWith("'") || elem.getName.startsWith("\"") =>
+        ReadAction.run(() => {
+          elem.getContainingFile.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
+            override def visitElement(cur: PsiElement): Unit = cur match {
+              case _: GoYaccRuleElem => super.visitElement(cur)
+              case _: GoYaccAlias if cur.getText == elem.getName => consumer.process(cur.getReference)
+              case _: GoYaccSymbol if cur.getText == elem.getName => consumer.process(cur.getReference)
+              case _: GoYaccRuleAlt => super.visitElement(cur)
+              case _: GoYaccRule => super.visitElement(cur)
+              case _: GoYaccRuleList => super.visitElement(cur)
+              case _ =>
+            }
+          })
+        })
+      case _ =>
+    }
 }
