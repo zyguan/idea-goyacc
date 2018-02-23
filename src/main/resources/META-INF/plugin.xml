@@ -1,11 +1,11 @@
 <idea-plugin>
   <id>idea.goyacc</id>
-  <name>IDEA GoYacc</name>
+  <name>GoYacc Support</name>
   <version>0.1-SNAPSHOT</version>
-  <vendor email="zhongyangguan@gmail.com" url="https://github.com/zyguan">zyguan</vendor>
+  <vendor email="zhongyangguan@gmail.com" url="https://github.com/zyguan/idea-goyacc">zyguan</vendor>
 
   <description><![CDATA[
-      IDEA plugin for goyacc.
+      Language support for goyacc (https://github.com/cznic/goyacc).
     ]]>
   </description>
 
@@ -19,9 +19,7 @@
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
-  <!-- uncomment to enable plugin in all products
   <depends>com.intellij.modules.lang</depends>
-  -->
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
