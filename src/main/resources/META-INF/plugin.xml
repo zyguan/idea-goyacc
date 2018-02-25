@@ -5,12 +5,12 @@
   <vendor email="zhongyangguan@gmail.com" url="https://github.com/zyguan/idea-goyacc">zyguan</vendor>
 
   <description><![CDATA[
-      Language support for goyacc (https://github.com/cznic/goyacc).
+      Language support for cznic's version of goyacc (https://github.com/cznic/goyacc).
     ]]>
   </description>
 
   <change-notes><![CDATA[
-      Under development.
+      Work in progress.
     ]]>
   </change-notes>
 

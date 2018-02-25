@@ -2,3 +2,5 @@
 [![Build Status](https://travis-ci.org/zyguan/idea-goyacc.svg)](https://travis-ci.org/zyguan/idea-goyacc)
 
 An IntelliJ IDEA plugin for [goyacc](https://github.com/cznic/goyacc).
+
+This is a work in progress and you can install the plugin from disk after executing `gradle build` (the plugin should be located at `build/distributions`).
