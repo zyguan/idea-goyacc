@@ -67,7 +67,7 @@ class GoYaccNamesValitor extends NamesValidator {
 
 
 class GoYaccSpecialReferenceSearcher extends QueryExecutorBase[PsiReference, ReferencesSearch.SearchParameters] {
-  override def processQuery(params: ReferencesSearch.SearchParameters, consumer: Processor[PsiReference]): Unit =
+  override def processQuery(params: ReferencesSearch.SearchParameters, consumer: Processor[_ >: PsiReference]): Unit =
     params.getElementToSearch match {
       case elem: GoYaccNamedElement if elem.getName.startsWith("'") || elem.getName.startsWith("\"") =>
         ReadAction.run(() => {
