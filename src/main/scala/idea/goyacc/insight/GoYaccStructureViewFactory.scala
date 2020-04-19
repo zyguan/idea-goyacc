@@ -41,47 +41,47 @@ class GoYaccStructureViewModel(file: PsiFile)
 
 class GoYaccStructureViewElement(element: PsiElement) extends PsiTreeElementBase[PsiElement](element) with SortableTreeElement {
 
+  import collection.JavaConverters._
+
+  private def declSuffix(e: PsiElement, v: String = ""): String = Option[PsiElement](e).map(e ⇒ s": ${e.getText}").getOrElse(v)
+
   override def getAlphaSortKey: String = getPresentableText
 
   override def getPresentableText: String = element match {
-    case _: GoYaccRuleList => "Rules"
     case rule: GoYaccRule => rule.getFirstChild.getText
-    case decl: GoYaccTokenDecl => s"Tokens :: ${decl.getField.getText}"
-    case decl: GoYaccPrecDecl => s"Tokens :: ${decl.getField.getText} ${decl.getFirstChild.getText}"
-    case decl: GoYaccTypeDecl => s"Types :: ${decl.getField.getText}"
+    case decl: GoYaccTokenDecl => "Tokens" + declSuffix(decl.getField)
+    case decl: GoYaccPrecDecl => "Tokens" + Option[PsiElement](decl.getFirstChild).map(e ⇒ s"(${e.getText.substring(1)})").getOrElse("") + declSuffix(decl.getField)
+    case decl: GoYaccTypeDecl => "Types" + declSuffix(decl.getField)
     case tok: GoYaccToken => tok.getTokenName.getText
     case sym: GoYaccNonterminal => sym.getNonterminalName.getText
+    case _: GoYaccRuleList => "Rules"
+    case _: GoYaccUnionDecl => "Union"
     case _ => element.toString
   }
 
   override def getChildrenBase: util.Collection[StructureViewTreeElement] = getElement match {
-    case file: GoYaccFile =>
+    case _: GoYaccFile =>
       val arr = new util.ArrayList[StructureViewTreeElement]()
       val decls = PsiTreeUtil.getChildOfType(element, classOf[GoYaccDeclList])
       if (decls != null) {
-        decls.getTokenDeclList.forEach(tok => if (tok.getField != null) arr.add(new GoYaccStructureViewElement(tok)))
-        decls.getPrecDeclList.forEach(tok => if (tok.getField != null) arr.add(new GoYaccStructureViewElement(tok)))
-        decls.getTypeDeclList.forEach(sym => arr.add(new GoYaccStructureViewElement(sym)))
+        decls.getUnionDeclList.forEach(uni => arr.add(new GoYaccStructureViewElement(uni)))
       }
       val rules = PsiTreeUtil.getChildOfType(element, classOf[GoYaccRuleList])
       if (rules != null && rules.getRuleList.size() > 0) arr.add(new GoYaccStructureViewElement(rules))
+      if (decls != null) {
+        decls.getTypeDeclList.forEach(sym => arr.add(new GoYaccStructureViewElement(sym)))
+        decls.getTokenDeclList.forEach(tok => arr.add(new GoYaccStructureViewElement(tok)))
+        decls.getPrecDeclList.forEach(tok => arr.add(new GoYaccStructureViewElement(tok)))
+      }
       arr
     case rules: GoYaccRuleList =>
-      val elems = new util.ArrayList[StructureViewTreeElement](rules.getRuleList.size())
-      rules.getRuleList.forEach(r => elems.add(new GoYaccStructureViewElement(r)))
-      elems
+      rules.getRuleList.asScala.map(e ⇒ new GoYaccStructureViewElement(e): StructureViewTreeElement).asJava
     case decl: GoYaccTokenDecl =>
-      val ts = new util.ArrayList[StructureViewTreeElement](decl.getTokenList.size())
-      decl.getTokenList.forEach(t => ts.add(new GoYaccStructureViewElement(t)))
-      ts
+      decl.getTokenList.asScala.map(e ⇒ new GoYaccStructureViewElement(e): StructureViewTreeElement).asJava
     case decl: GoYaccPrecDecl =>
-      val ts = new util.ArrayList[StructureViewTreeElement](decl.getTokenList.size())
-      decl.getTokenList.forEach(t => ts.add(new GoYaccStructureViewElement(t)))
-      ts
+      decl.getTokenList.asScala.map(e ⇒ new GoYaccStructureViewElement(e): StructureViewTreeElement).asJava
     case decl: GoYaccTypeDecl =>
-      val ts = new util.ArrayList[StructureViewTreeElement](decl.getNonterminalList.size())
-      decl.getNonterminalList.forEach(t => ts.add(new GoYaccStructureViewElement(t)))
-      ts
+      decl.getNonterminalList.asScala.map(e ⇒ new GoYaccStructureViewElement(e): StructureViewTreeElement).asJava
     case _ =>
       Collections.emptyList()
   }
@@ -92,6 +92,7 @@ class GoYaccStructureViewElement(element: PsiElement) extends PsiTreeElementBase
     case _: GoYaccTokenDecl => PlatformIcons.SOURCE_FOLDERS_ICON
     case _: GoYaccPrecDecl => PlatformIcons.SOURCE_FOLDERS_ICON
     case _: GoYaccTypeDecl => PlatformIcons.TEST_SOURCE_FOLDER
+    case _: GoYaccUnionDecl => PlatformIcons.INTERFACE_ICON
     case _: GoYaccToken => PlatformIcons.CLASS_ICON
     case _: GoYaccNonterminal => PlatformIcons.FIELD_ICON
     case _ => null
