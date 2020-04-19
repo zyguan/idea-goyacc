@@ -1,10 +1,10 @@
 package idea.goyacc
 
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import idea.goyacc.insight.GoYaccNamesValitor
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import idea.goyacc.insight.GoYaccNamesValidator
 import org.junit.Assert._
 
-class GoYaccRenameTest extends LightJavaCodeInsightFixtureTestCase {
+class GoYaccRenameTest extends BasePlatformTestCase {
 
   override def getTestDataPath: String = "src/test/resources/testData/insight"
 
@@ -33,7 +33,7 @@ class GoYaccRenameTest extends LightJavaCodeInsightFixtureTestCase {
   }
 
   def testValidateIdentifier(): Unit = {
-    val validator = new GoYaccNamesValitor
+    val validator = new GoYaccNamesValidator
     assertTrue(validator.isIdentifier("foo", getProject))
     assertTrue(validator.isIdentifier("'<>'", getProject))
     assertTrue(validator.isIdentifier("\"bar\"", getProject))

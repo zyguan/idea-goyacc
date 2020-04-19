@@ -2,9 +2,9 @@ package idea.goyacc
 
 import com.intellij.openapi.actionSystem.IdeActions
 import com.intellij.testFramework.fixtures.impl.{JavaCodeInsightTestFixtureImpl, LightTempDirTestFixtureImpl}
-import com.intellij.testFramework.fixtures.{IdeaTestFixtureFactory, LightJavaCodeInsightFixtureTestCase}
+import com.intellij.testFramework.fixtures.{BasePlatformTestCase, IdeaTestFixtureFactory}
 
-class GoYaccFoldingTest extends LightJavaCodeInsightFixtureTestCase {
+class GoYaccFoldingTest extends BasePlatformTestCase {
 
   override def getTestDataPath: String = "src/test/resources/testData/insight"
 

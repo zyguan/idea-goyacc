@@ -1,10 +1,10 @@
 package idea.goyacc
 
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.codeInsight.generation.actions.{CommentByBlockCommentAction, CommentByLineCommentAction}
 import com.intellij.openapi.actionSystem.IdeActions
 
-class GoYaccCommenterTest extends LightJavaCodeInsightFixtureTestCase {
+class GoYaccCommenterTest extends BasePlatformTestCase {
 
   override def getTestDataPath: String = "src/test/resources/testData/insight"
 
