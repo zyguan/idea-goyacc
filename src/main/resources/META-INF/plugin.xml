@@ -1,29 +1,36 @@
 <idea-plugin>
   <id>idea.goyacc</id>
   <name>GoYacc Support</name>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
   <vendor email="zhongyangguan@gmail.com" url="https://github.com/zyguan/idea-goyacc">zyguan</vendor>
 
-  <description><![CDATA[
-      Language support for cznic's version of goyacc (https://github.com/cznic/goyacc).
+  <description>
+    <![CDATA[
+      Language support for cznic's version of <a href="https://github.com/cznic/goyacc">goyacc</a>.
     ]]>
   </description>
 
-  <change-notes><![CDATA[
-      Work in progress.
+  <change-notes>
+    <![CDATA[
+      <ul>
+        <li>Compatibility: IntelliJ IDEA 2019.3</li>
+      </ul>
+      <a href="https://github.com/zyguan/idea-goyacc/commits/master">Full change log...</a>
     ]]>
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0"/>
+  <idea-version since-build="193"/>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <fileTypeFactory implementation="idea.goyacc.GoYaccFileTypeFactory"/>
+    <fileType name="GoYacc File" language="GoYacc" extensions="y"
+              implementationClass="idea.goyacc.GoYaccFileType" fieldName="INSTANCE" />
     <lang.parserDefinition language="GoYacc" implementationClass="idea.goyacc.GoYaccParserDefinition"/>
     <lang.syntaxHighlighterFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccSyntaxHighlighterFactory"/>
     <lang.braceMatcher language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccBraceMatcher"/>

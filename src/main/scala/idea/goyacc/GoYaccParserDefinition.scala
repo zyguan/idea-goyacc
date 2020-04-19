@@ -30,7 +30,7 @@ object GoYaccParserDefinition {
   import GoYaccType._
   import idea.goyacc.psi.GoYaccTypeExt._
 
-  val FILE_TYPE = new IFileElementType(GoYaccLanguage)
+  val FILE_TYPE = new IFileElementType(GoYaccLanguage.INSTANCE)
 
   val Comments: TokenSet = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT)
   val StringLiterals: TokenSet = TokenSet.create(STR_LIT)
