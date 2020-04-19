@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>idea.goyacc</id>
   <name>GoYacc Support</name>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.1.0-alpha</version>
   <vendor email="zhongyangguan@gmail.com" url="https://github.com/zyguan/idea-goyacc">zyguan</vendor>
 
   <description>
@@ -14,8 +14,8 @@
     <![CDATA[
       <ul>
         <li>Compatibility: IntelliJ IDEA 2019.3</li>
+        <li>Fix <a href="https://github.com/zyguan/idea-goyacc/issues/4">#4</a></li>
       </ul>
-      <a href="https://github.com/zyguan/idea-goyacc/commits/master">Full change log...</a>
     ]]>
   </change-notes>
 
@@ -25,7 +25,6 @@
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.lang</depends>
-  <depends>com.intellij.modules.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
@@ -37,7 +36,7 @@
     <lang.commenter language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccCommenter"/>
     <lang.foldingBuilder language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccFoldingBuilder"/>
     <lang.psiStructureViewFactory language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccStructureViewFactory"/>
-    <lang.namesValidator language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccNamesValitor"/>
+    <lang.namesValidator language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccNamesValidator"/>
     <lang.findUsagesProvider language="GoYacc" implementationClass="idea.goyacc.insight.GoYaccFindUsagesProvider"/>
     <referencesSearch implementation="idea.goyacc.insight.GoYaccSpecialReferenceSearcher"/>
     <codeStyleSettingsProvider implementation="idea.goyacc.insight.GoYaccCodeStyleSettingsProvider"/>

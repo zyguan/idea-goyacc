@@ -46,14 +46,14 @@ class GoYaccFindUsagesProvider extends FindUsagesProvider {
 }
 
 
-object GoYaccNamesValitor {
+object GoYaccNamesValidator {
   val NAME_PAT: Pattern = """[_a-zA-Z][_a-zA-Z0-9.]*""".r.pattern
   val STR1_PAT: Pattern = """'[^']+'""".r.pattern
   val STR2_PAT: Pattern = """"\w+"""".r.pattern
 }
 
-class GoYaccNamesValitor extends NamesValidator {
-  import GoYaccNamesValitor._
+class GoYaccNamesValidator extends NamesValidator {
+  import GoYaccNamesValidator._
 
   override def isKeyword(name: String, project: Project): Boolean = false
 

@@ -44,7 +44,7 @@ dependencies {
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    plugins = [ 'java', 'PsiViewer:193-SNAPSHOT' ]
+    plugins = [ 'PsiViewer:193-SNAPSHOT' ]
     version ideaVersion
     updateSinceUntilBuild = false
 }

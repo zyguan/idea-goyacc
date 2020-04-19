@@ -27,4 +27,5 @@ public class GoYaccFileType extends LanguageFileType {
     @Nullable
     @Override
     public Icon getIcon() { return GoYaccLanguage.ICON_FILE; }
+
 }
