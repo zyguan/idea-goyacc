@@ -29,7 +29,7 @@ class GoYaccCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 
 object GoYaccCodeStyleSettingsProvider {
   class GoYaccCodeStyleMainPanel(currentSettings: CodeStyleSettings, settings: CodeStyleSettings)
-    extends TabbedLanguageCodeStylePanel(GoYaccLanguage, currentSettings, settings) {
+    extends TabbedLanguageCodeStylePanel(GoYaccLanguage.INSTANCE, currentSettings, settings) {
     override def initTabs(settings: CodeStyleSettings): Unit = {
       addIndentOptionsTab(settings)
     }
@@ -38,7 +38,7 @@ object GoYaccCodeStyleSettingsProvider {
 
 class GoYaccLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
 
-  override def getLanguage: Language = GoYaccLanguage
+  override def getLanguage: Language = GoYaccLanguage.INSTANCE
 
   override def getCodeSample(settingsType: LanguageCodeStyleSettingsProvider.SettingsType): String =
     """/* Infix notation calculator.  */
@@ -84,7 +84,7 @@ class GoYaccLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsP
     """.stripMargin
 
   override def getDefaultCommonSettings: CommonCodeStyleSettings = {
-    val settings = new CommonCodeStyleSettings(GoYaccLanguage)
+    val settings = new CommonCodeStyleSettings(GoYaccLanguage.INSTANCE)
     settings.initIndentOptions()
     settings.getIndentOptions.INDENT_SIZE = 8
     settings.getIndentOptions.TAB_SIZE = 8

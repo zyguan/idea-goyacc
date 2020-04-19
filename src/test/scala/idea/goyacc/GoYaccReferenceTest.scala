@@ -1,10 +1,10 @@
 package idea.goyacc
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import idea.goyacc.psi.{GoYaccRule, GoYaccTokenAlias, GoYaccTokenName}
 import org.junit.Assert._
 
-class GoYaccReferenceTest extends LightCodeInsightFixtureTestCase {
+class GoYaccReferenceTest extends LightJavaCodeInsightFixtureTestCase {
 
   override def getTestDataPath: String = "src/test/resources/testData/insight"
 

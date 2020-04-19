@@ -1,14 +1,6 @@
-buildscript {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-        classpath "com.github.hurricup:gradle-grammar-kit-plugin:2017.1.1"
-    }
-}
-
 plugins {
-    id 'org.jetbrains.intellij' version "0.3.12"
+    id 'org.jetbrains.intellij' version "0.4.13"
+    id "org.jetbrains.grammarkit" version "2019.3"
 }
 
 repositories {
@@ -20,7 +12,18 @@ apply plugin: 'scala'
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
-tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    if (project.hasProperty('JDK8_HOME')) {
+        options.bootstrapClasspath = files("$JDK8_HOME/jre/lib/rt.jar")
+    }
+}
+tasks.withType(ScalaCompile) {
+    options.encoding = 'UTF-8'
+    if (project.hasProperty('JDK8_HOME')) {
+        options.bootstrapClasspath = files("$JDK8_HOME/jre/lib/rt.jar")
+    }
+}
 
 sourceSets {
     main {
@@ -41,7 +44,7 @@ dependencies {
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    plugins = [ 'PsiViewer:182.2757.2' ]
+    plugins = [ 'java', 'PsiViewer:193-SNAPSHOT' ]
     version ideaVersion
     updateSinceUntilBuild = false
 }
@@ -62,9 +65,10 @@ task initGenerate(type: GenerateParser) {
 task initCompile(type: ScalaCompile) {
     source = fileTree(dir: 'src/main',
             includes: [
-                    'scala/**/GoYaccLanguage.scala',
                     'scala/**/psi/GoYaccPsiUtil.scala',
                     'scala/**/psi/GoYaccRefs.scala',
+                    'java/**/GoYaccLanguage.java',
+                    'java/**/GoYaccFileType.java',
                     'java/**/psi/GoYaccNamedElement.java',
                     'gen/**/psi/*.java'],
             excludes: ['gen/**/GoYaccType.java'])

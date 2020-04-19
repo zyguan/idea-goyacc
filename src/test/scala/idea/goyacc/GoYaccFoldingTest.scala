@@ -1,12 +1,10 @@
 package idea.goyacc
 
 import com.intellij.openapi.actionSystem.IdeActions
-import com.intellij.openapi.roots.LanguageLevelProjectExtension
-import com.intellij.pom.java.LanguageLevel
 import com.intellij.testFramework.fixtures.impl.{JavaCodeInsightTestFixtureImpl, LightTempDirTestFixtureImpl}
-import com.intellij.testFramework.fixtures.{IdeaTestFixtureFactory, LightCodeInsightFixtureTestCase}
+import com.intellij.testFramework.fixtures.{IdeaTestFixtureFactory, LightJavaCodeInsightFixtureTestCase}
 
-class GoYaccFoldingTest extends LightCodeInsightFixtureTestCase {
+class GoYaccFoldingTest extends LightJavaCodeInsightFixtureTestCase {
 
   override def getTestDataPath: String = "src/test/resources/testData/insight"
 
@@ -28,7 +26,7 @@ class GoYaccFoldingTest extends LightCodeInsightFixtureTestCase {
     myFixture.setUp()
     myFixture.setTestDataPath(getTestDataPath)
 
-    myModule = myFixture.getModule
+    // myModule = myFixture.getModule
 
   }
 

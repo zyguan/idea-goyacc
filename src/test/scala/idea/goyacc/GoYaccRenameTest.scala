@@ -1,10 +1,10 @@
 package idea.goyacc
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import idea.goyacc.insight.GoYaccNamesValitor
 import org.junit.Assert._
 
-class GoYaccRenameTest extends LightCodeInsightFixtureTestCase {
+class GoYaccRenameTest extends LightJavaCodeInsightFixtureTestCase {
 
   override def getTestDataPath: String = "src/test/resources/testData/insight"
 

@@ -144,6 +144,6 @@ object GoYaccElementFactory {
   }
 
   def createFile(proj: Project, text: String): PsiFile =
-    PsiFileFactory.getInstance(proj).createFileFromText("a.y", GoYaccLanguage, text, false, false)
+    PsiFileFactory.getInstance(proj).createFileFromText("a.y", GoYaccLanguage.INSTANCE, text, false, false)
 
 }
