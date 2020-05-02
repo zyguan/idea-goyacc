@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>idea.goyacc</id>
   <name>GoYacc Support</name>
-  <version>0.1.0-alpha</version>
+  <version>0.1.0</version>
   <vendor email="zhongyangguan@gmail.com" url="https://github.com/zyguan/idea-goyacc">zyguan</vendor>
 
   <description>
